@@ -5,6 +5,25 @@ from typing import Any
 from database.schema import DatabaseSchema, introspect_mysql_schema
 
 
+class MySQLConnectionError(RuntimeError):
+    """Safe connection failure with no credentials or server details."""
+
+    def __init__(self, category: str) -> None:
+        self.category = category
+        super().__init__(category)
+
+
+def _connection_error_category(error: Exception) -> str:
+    errno = getattr(error, "errno", None)
+    if errno in {1044, 1045, 1698}:
+        return "MySQL authentication failure."
+    if errno == 1049:
+        return "MySQL database not found."
+    if errno in {2003, 2005, 2006, 2013}:
+        return "MySQL connection failure."
+    return "MySQL connection failure."
+
+
 @dataclass(frozen=True)
 class MySQLConfig:
     """Connection settings for a MySQL database.
@@ -43,14 +62,17 @@ class MySQLAdapter:
                 "mysql-connector-python is required to connect to MySQL."
             ) from error
 
-        self._connection = mysql.connector.connect(
-            host=self.config.host,
-            port=self.config.port,
-            database=self.config.database,
-            user=self.config.user,
-            password=self.config.password,
-            connection_timeout=self.config.connect_timeout,
-        )
+        try:
+            self._connection = mysql.connector.connect(
+                host=self.config.host,
+                port=self.config.port,
+                database=self.config.database,
+                user=self.config.user,
+                password=self.config.password,
+                connection_timeout=self.config.connect_timeout,
+            )
+        except mysql.connector.Error as error:
+            raise MySQLConnectionError(_connection_error_category(error)) from error
 
     def close(self) -> None:
         """Close the connection, if open."""

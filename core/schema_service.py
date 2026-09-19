@@ -6,7 +6,6 @@ from typing import ClassVar
 from database.base import DatabaseAdapter
 from database.schema import DatabaseSchema, TableInfo
 
-
 _TOKEN_PATTERN = re.compile(r"[a-z0-9]+")
 _COMMON_IDENTIFIERS = {
     "buyer": "customer",
