@@ -1,4 +1,10 @@
-# QueryPeek
+## QueryPeek
+
+# WATCH IT HERE ↓ 
+
+[![Watch the video](https://i.postimg.cc/8P8kmZG7/image.png'></a>
+)](https://www.awesomescreenshot.com/video/56692079?key=28d48f2f87220a5fdf01eb1cedda7576)     
+
 
 **Ask your MySQL database questions in plain English. Get validated SQL, results, and charts.**
 
@@ -9,7 +15,8 @@ QueryPeek is an open-source, AI-powered data exploration app. It reads your data
 <!-- Add a screenshot or GIF of the AI Copilot here -->
 <!-- ![QueryPeek demo](docs/demo.gif) -->
 
-**Live demo:** _add link here_
+**Live demo:** 
+https://querrypeek.streamlit.app/
 
 ---
 
