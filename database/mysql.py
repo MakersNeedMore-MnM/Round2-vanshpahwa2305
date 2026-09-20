@@ -1,3 +1,4 @@
+import ssl
 from dataclasses import dataclass
 from types import TracebackType
 from typing import Any
@@ -38,6 +39,10 @@ class MySQLConfig:
     password: str
     port: int = 3306
     connect_timeout: int = 10
+    ssl_disabled: bool = False
+    ssl_verify_cert: bool = False
+    ssl_verify_identity: bool = False
+    ssl_ca: str | None = None
 
 
 class MySQLAdapter:
@@ -62,15 +67,33 @@ class MySQLAdapter:
                 "mysql-connector-python is required to connect to MySQL."
             ) from error
 
+        connection_kwargs: dict[str, Any] = {
+            "host": self.config.host,
+            "port": self.config.port,
+            "database": self.config.database,
+            "user": self.config.user,
+            "password": self.config.password,
+            "connection_timeout": self.config.connect_timeout,
+        }
+
+        if not self.config.ssl_disabled:
+            connection_kwargs["ssl_disabled"] = False
+            connection_kwargs["ssl_verify_cert"] = self.config.ssl_verify_cert
+            connection_kwargs["ssl_verify_identity"] = self.config.ssl_verify_identity
+            ssl_ca = self.config.ssl_ca
+            if ssl_ca is None:
+                try:
+                    import certifi
+
+                    ssl_ca = certifi.where()
+                except Exception:
+                    default_paths = ssl.get_default_verify_paths()
+                    ssl_ca = default_paths.openssl_cafile or default_paths.cafile
+            if ssl_ca:
+                connection_kwargs["ssl_ca"] = ssl_ca
+
         try:
-            self._connection = mysql.connector.connect(
-                host=self.config.host,
-                port=self.config.port,
-                database=self.config.database,
-                user=self.config.user,
-                password=self.config.password,
-                connection_timeout=self.config.connect_timeout,
-            )
+            self._connection = mysql.connector.connect(**connection_kwargs)
         except mysql.connector.Error as error:
             raise MySQLConnectionError(_connection_error_category(error)) from error
 

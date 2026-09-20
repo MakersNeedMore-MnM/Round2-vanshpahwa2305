@@ -49,6 +49,16 @@ def test_mysql_config_defaults_to_mysql_port() -> None:
     assert config.connect_timeout == 10
 
 
+def test_mysql_config_uses_secure_tls_defaults() -> None:
+    config = MySQLConfig(
+        host="db.example.com", database="demo", user="readonly", password="secret"
+    )
+    assert config.ssl_disabled is False
+    assert config.ssl_verify_cert is False
+    assert config.ssl_verify_identity is False
+    assert config.ssl_ca is None
+
+
 def test_mysql_schema_introspection_collects_metadata() -> None:
     cursor = FakeCursor()
 

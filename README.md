@@ -31,7 +31,7 @@ copy .env.example .env
 streamlit run app.py
 ```
 
-Configure local `.env` values or Streamlit Cloud secrets for OpenRouter and a
+Configure local `.env` values or Streamlit Cloud secrets for Google Gemini and a
 hosted MySQL database. The database account used by QueryPeek must have only
 `SELECT` permission. Use [`demo_database/setup.sql`](demo_database/setup.sql)
 to create the synthetic demo schema and data.

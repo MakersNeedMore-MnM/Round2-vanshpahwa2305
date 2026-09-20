@@ -55,9 +55,9 @@ DEMO_DATABASE_PORT=3306
 DEMO_DATABASE_NAME=
 DEMO_DATABASE_USER=
 DEMO_DATABASE_PASSWORD=
-LLM_PROVIDER=
-LLM_API_KEY=
-LLM_MODEL=
+LLM_PROVIDER=gemini
+GEMINI_API_KEY=
+LLM_MODEL=gemini-3.6-flash
 QUERY_TIMEOUT_SECONDS=10
 MAX_ROWS=10000
 MAX_REPAIR_RETRIES=2
@@ -79,9 +79,9 @@ Use synthetic data for the public demo.
 Required secrets:
 
 ```toml
-LLM_PROVIDER = "openrouter"
-LLM_API_KEY = "..."
-LLM_MODEL = "poolside/laguna-s-2.1:free"
+LLM_PROVIDER = "gemini"
+GEMINI_API_KEY = "..."
+LLM_MODEL = "gemini-3.6-flash"
 
 DEMO_DATABASE_HOST = "..."
 DEMO_DATABASE_PORT = "3306"
